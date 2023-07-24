@@ -5,7 +5,7 @@ export type OracleSubmitRequest = {
     params: [string];
 }
 
-export type OrarcleCheckResult = {
+export type OracleCheckResult = {
     id: number;
     jsonrpc: "2.0";
     method: "oracle_checkResult";
