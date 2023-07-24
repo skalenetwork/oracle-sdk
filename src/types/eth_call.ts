@@ -12,9 +12,9 @@ export type UnformattedEthCallData = {
 /**
  * @description For use with eth_call for ethApi. Use when generating all data on your end
  */
-export type EthCallParams = [{
+export type EthCallParams = {
     from: `0x${string}`;
     to: `0x${string}`;
     data: `0x${string}` | UnformattedEthCallData;
     gas: `0x${string}`;
-}];
+};

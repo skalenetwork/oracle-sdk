@@ -1,24 +1,29 @@
+import { EthCallParams } from "./eth_call";
 import { Uri } from "./shared";
 
-export type RawOracleHttpsRequest = {
-    cid: number;
-    uri: Uri;
+type _BaseRequest = {
+    cid: string;
     jsps: string[];
-    time: number;
+    pow: string | number;
+    time: number | string;
+    encoding: "json";
+};
+
+export type RawOracleHttpsRequest = {
+    uri: Uri;
     encoding: string; // JSON only
     trims?: number[];
     post?: string;
-    pow: string | number;
-}
+    rType: "https";
+} & _BaseRequest;
 
 export type RawOracleEthApiRequest = {
-    cid: number;
     uri: string;
-    time: number;
     ethApi: string;
-    params: string;
-}
+    params: EthCallParams;
+    rType: "eth";
+} & _BaseRequest;
 
 export type RawOracleRequest = {
     type: "raw";
-} | RawOracleEthApiRequest | RawOracleHttpsRequest;
+} & RawOracleEthApiRequest | RawOracleHttpsRequest;
