@@ -12,8 +12,9 @@ export type OracleCheckResult = {
     params: [string];
 }
 
+export type RpcUrl = `http://${string}` | `https://${string}`;
+
 export type OracleFetchOptions = {
-    rpcUrl?: string;
-    chainName: ChainName;
-    isTestnet: boolean; /// Required parameter as it changes the number of checks on check results
+    nameOrRpcUrl: string;
+    network: "mainnet" | "testnet" | "auto";
 }

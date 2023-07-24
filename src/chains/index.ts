@@ -1,10 +1,9 @@
-type ChainName = "calypso" | "calypso-testnet" | "chaos-testnet" | "europa" | "europa-testnet" | "nebula" | "nebula-testnet" | "titan" | "titan-testnet";
-type RpcUrl = `http://${string}` | `https://${string}`;
+import { RpcUrl } from "../types";
 
 const _getMainnetRPC = (name: string) : RpcUrl => `https://mainnet.skalenodes.com/v1/${name}`;
 const _getTestnetRPC = (name: string) : RpcUrl => `https://staging-v3.skalenodes.com/v1/${name}`;
 
-export const chains: Record<ChainName, RpcUrl> = {
+export const chains: {[key: string]: RpcUrl} = {
     "calypso": _getMainnetRPC("honoable-steel-rasalhague"),
     "calypso-testnet": _getTestnetRPC("staging-utter-unripe-menkar"),
     "chaos-testnet": _getTestnetRPC("staging-fast-active-bellatrix"),

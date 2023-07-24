@@ -1,11 +1,28 @@
 import { formatCheckResult, getRPCUrl } from "../utils";
 import { OracleFetchOptions, OracleResponse } from "../types";
 
+// TODO - Fix this/change this, maybe update the type to reduce number of checks
+function _getMaxIterations(opts: OracleFetchOptions) {
+    if (opts.network === "auto") {
+        if (opts.nameOrRpcUrl.includes("staging") || opts.nameOrRpcUrl.includes("testnet")) {
+            return 3;
+        } else {
+            return 15;
+        }
+    } else if (opts.network === "mainnet") {
+        return 15;
+    } else if (opts.network === "testnet") {
+        return 3;
+    } else {
+        throw new Error("Invalid Network Configuration");
+    }
+}
+
 export async function checkResult(oracleResponseId: string, opts: OracleFetchOptions) : Promise<OracleResponse> {
     const req = formatCheckResult(oracleResponseId);
     
     let i = 0;
-    let maxIterations = opts.isTestnet ? 3 : 15;
+    let maxIterations = _getMaxIterations(opts);
 
     while (i < maxIterations) {
 		const check = await fetch(getRPCUrl(opts), {
