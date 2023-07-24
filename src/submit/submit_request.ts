@@ -1,17 +1,8 @@
-import { OracleSubmitRequest } from "../types";
+import { OracleSubmitRequest, OracleFetchOptions } from "../types";
+import { getRPCUrl } from "../utils";
 
-type SubmitRequestOptions = {
-    rpcUrl?: string;
-    chainName: ChainName;
-}
-
-function _getRPCUrl(opts: SubmitRequestOptions) : string {
-    if (opts.rpcUrl) return opts.rpcUrl;
-    return chains[opts.chainName];
-}
-
-export async function submitRequest(request: OracleSubmitRequest, opts: SubmitRequestOptions) : Promise<string> {
-    const response = await fetch(_getRPCUrl(opts), {
+export default async function submitRequest(request: OracleSubmitRequest, opts: OracleFetchOptions) : Promise<string> {
+    const response = await fetch(getRPCUrl(opts), {
 		method: "POST",
 		body: JSON.stringify(request),
 		headers: {

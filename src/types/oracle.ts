@@ -11,3 +11,9 @@ export type OracleCheckResult = {
     method: "oracle_checkResult";
     params: [string];
 }
+
+export type OracleFetchOptions = {
+    rpcUrl?: string;
+    chainName: ChainName;
+    isTestnet: boolean; /// Required parameter as it changes the number of checks on check results
+}
