@@ -4,8 +4,8 @@ import sendRequestAndWaitFormatted from "./req_wait_fmt";
 import sendRequestAndWait from "./req_wait";
 
 export {
-    sendRawReqeustAndWaitFormatted,
-    sendRequestAndWaitFormatted,
-    sendRawRequestAndWait,
-    sendRequestAndWait
-}
+  sendRawReqeustAndWaitFormatted,
+  sendRequestAndWaitFormatted,
+  sendRawRequestAndWait,
+  sendRequestAndWait,
+};

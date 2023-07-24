@@ -1,3 +1,3 @@
 import submitRequest from "./submit_request";
 
-export { submitRequest }
+export { submitRequest };
