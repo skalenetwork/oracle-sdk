@@ -1,5 +1,5 @@
 import { formatCheckResult, getRPCUrl } from "../utils";
-import { OracleFetchOptions, OracleResponse } from "../types";
+import { OracleFetchOptions } from "../types";
 
 // TODO - Fix this/change this, maybe update the type to reduce number of checks
 function _getMaxIterations(opts: OracleFetchOptions) {
@@ -24,7 +24,7 @@ function _getMaxIterations(opts: OracleFetchOptions) {
 export async function checkResult(
   oracleResponseId: string,
   opts: OracleFetchOptions,
-): Promise<OracleResponse> {
+): Promise<string> {
   const req = formatCheckResult(oracleResponseId);
 
   let i = 0;
@@ -44,7 +44,7 @@ export async function checkResult(
     if (response.error) {
       await new Promise((resolve) => setTimeout(resolve, 2500));
     } else {
-      return response as OracleResponse;
+      return response.result;
     }
 
     i++;

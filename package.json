@@ -27,9 +27,9 @@
     "lint": "tslint -c tslint.json 'src/**/*.ts'",
     "lint:fix": "tslint --fix -c tslint.json 'src/**/*.ts'",
     "prettier": "npx prettier src --check",
-    "prettier:fix": "npm run prettier -- --write",
-    "format": "npm run prettier:fix && npm run lint:fix",
-    "prepack": "npm run build"
+    "prettier:fix": "yarn prettier --write",
+    "format": "yarn prettier:fix && yarn lint:fix",
+    "prepack": "yarn build"
   },
   "repository": {
     "type": "git",

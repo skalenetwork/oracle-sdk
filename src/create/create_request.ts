@@ -1,9 +1,11 @@
+import { encodeFunctionData } from "viem";
 import {
   FormattedOracleRequest,
   OracleRequest,
   RawOracleRequest,
+  UnformattedEthCallData,
 } from "../types";
-import { getUTCTimestamp, proofOfWork, formatSubmitRequest } from "../utils";
+import { getUTCTimestamp, proofOfWork } from "../utils";
 /**
  *
  * @param method the ethApi method from the request
@@ -40,6 +42,16 @@ function _validateJsps(jsps: string[]) {
   if (jsps.length >= 32) throw new Error("Exceeded Maximum amount of JSPS");
 }
 
+function _handleData(data: `0x${string}` | UnformattedEthCallData) {
+  if (data.toString().startsWith("0x")) return data;
+  else {
+    const callData = data as UnformattedEthCallData;
+    return encodeFunctionData({
+      ...callData,
+    });
+  }
+}
+
 export default async function createRequest(request: OracleRequest) {
   _validateJsps(request.jsps);
   let finalStringRequest: string = "";
@@ -47,7 +59,15 @@ export default async function createRequest(request: OracleRequest) {
     const rawRequest = request as RawOracleRequest;
     if (rawRequest.rType === "eth") {
       _validateEthApiMethod(rawRequest.ethApi);
-      finalStringRequest = `{"cid":${rawRequest.cid},"uri":${rawRequest.uri},"ethApi":${rawRequest.ethApi},"params":[{"from":${rawRequest.params.from},"to":${rawRequest.params.to},"data":${rawRequest.params.data},"gas":${rawRequest.params.gas}, "latest"]},"encoding":${rawRequest.encoding},"time":${rawRequest.time},"pow":${rawRequest.pow}}`;
+      finalStringRequest = `{"cid":${rawRequest.cid},"uri":${
+        rawRequest.uri
+      },"ethApi":${rawRequest.ethApi},"params":[{"from":${
+        rawRequest.params.from
+      },"to":${rawRequest.params.to},"data":${_handleData(
+        rawRequest.params.data,
+      )},"gas":${rawRequest.params.gas}, "latest"]},"encoding":${
+        rawRequest.encoding
+      },"time":${rawRequest.time},"pow":${rawRequest.pow}}`;
     } else {
       finalStringRequest = `{"cid":${rawRequest.cid},"uri":${
         rawRequest.uri
@@ -65,9 +85,9 @@ export default async function createRequest(request: OracleRequest) {
         formattedRequest.uri
       },"jsps":${_formatJsps(formattedRequest.jsps)},"params":[{"from":${
         formattedRequest.ethApi.params.from
-      },"to":${formattedRequest.ethApi.params},"data":${
-        formattedRequest.ethApi.params.data
-      },"gas":${
+      },"to":${formattedRequest.ethApi.params},"data":${_handleData(
+        formattedRequest.ethApi.params.data,
+      )},"gas":${
         formattedRequest.ethApi.params.gas
       }, "latest"]},"encoding":"json"}`;
     } else {
@@ -87,5 +107,7 @@ export default async function createRequest(request: OracleRequest) {
 
   if (finalStringRequest === "") throw new Error("Failed to Create Request");
 
-  return formatSubmitRequest(finalStringRequest);
+  return finalStringRequest;
+
+  // return formatSubmitRequest(finalStringRequest);
 }

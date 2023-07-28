@@ -6,6 +6,7 @@ import {
 import { createRequest } from "../create";
 import { checkResult } from "../check";
 import { submitRequest } from "../submit";
+import { formatSubmitRequest } from "../utils";
 
 export default async function sendRequestAndWait(
   request: FormattedOracleRequest,
@@ -16,8 +17,11 @@ export default async function sendRequestAndWait(
     type: "formatted",
   });
 
-  const requestId = await submitRequest(submitRequestData, opts);
+  const requestId = await submitRequest(
+    formatSubmitRequest(submitRequestData),
+    opts,
+  );
   const resultData = await checkResult(requestId, opts);
 
-  return resultData;
+  return JSON.parse(resultData) as OracleResponse;
 }

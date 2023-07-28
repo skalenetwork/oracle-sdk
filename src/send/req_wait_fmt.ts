@@ -7,6 +7,7 @@ import { createRequest } from "../create";
 import { checkResult } from "../check";
 import { formatResponse } from "../format";
 import { submitRequest } from "../submit";
+import { formatSubmitRequest } from "../utils";
 
 export default async function sendRequestAndWaitFormatted(
   request: FormattedOracleRequest,
@@ -17,7 +18,10 @@ export default async function sendRequestAndWaitFormatted(
     type: "formatted",
   });
 
-  const requestId = await submitRequest(submitRequestData, opts);
+  const requestId = await submitRequest(
+    formatSubmitRequest(submitRequestData),
+    opts,
+  );
   const resultData = await checkResult(requestId, opts);
 
   return formatResponse(resultData);

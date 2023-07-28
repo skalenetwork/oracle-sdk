@@ -19,3 +19,7 @@ export const MAX_POW_NUMBER = 100_000;
  */
 export const MAX_UINT_256 =
   BigInt(0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff);
+
+/** Bytes32 Zero hash */
+export const ZERO_HASH: `0x${string}` =
+  "0x0000000000000000000000000000000000000000000000000000000000000000" as const;
