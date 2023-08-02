@@ -1,9 +1,12 @@
 import { encodeFunctionData } from "viem";
 import {
+  FormattedOracleEthApiRequest,
+  FormattedOracleHttpsRequest,
   FormattedOracleRequest,
-  OracleRequest,
+  RawOracleEthApiRequest,
+  RawOracleHttpsRequest,
   RawOracleRequest,
-  UnformattedEthCallData,
+  UnformattedEthCallData
 } from "../types";
 import { getUTCTimestamp, proofOfWork } from "../utils";
 /**
@@ -12,30 +15,6 @@ import { getUTCTimestamp, proofOfWork } from "../utils";
  *
  * @description Currently only eth_call is supported. Upon addition of multiple will change this to an object to attain O(1) lookup time for keys with undefined meaning invalid
  */
-function _validateEthApiMethod(method: string) {
-  if (method !== "eth_call")
-    throw new Error("Only eth_call is currently supported");
-}
-
-function _formatJsps(jsps: string[]) {
-  return `[${jsps.join(",")}]`;
-}
-
-function _formatTrims(trims: number[]) {
-  return `[${trims.join(",")}]`;
-}
-
-function _addTrims(trims?: number[]) {
-  if (trims) {
-    return `"trims":${_formatTrims(trims)},`;
-  }
-}
-
-function _addPost(post?: string) {
-  if (post) {
-    return `"post":${post.trim()},`;
-  }
-}
 
 function _validateJsps(jsps: string[]) {
   if (jsps.length === 0) throw new Error("Must have at least one jsps");
@@ -52,62 +31,33 @@ function _handleData(data: `0x${string}` | UnformattedEthCallData) {
   }
 }
 
-export default async function createRequest(request: OracleRequest) {
-  _validateJsps(request.jsps);
-  let finalStringRequest: string = "";
-  if (request.type === "raw") {
-    const rawRequest = request as RawOracleRequest;
-    if (rawRequest.rType === "eth") {
-      _validateEthApiMethod(rawRequest.ethApi);
-      finalStringRequest = `{"cid":${rawRequest.cid},"uri":${
-        rawRequest.uri
-      },"ethApi":${rawRequest.ethApi},"params":[{"from":${
-        rawRequest.params.from
-      },"to":${rawRequest.params.to},"data":${_handleData(
-        rawRequest.params.data,
-      )},"gas":${rawRequest.params.gas}, "latest"]},"encoding":${
-        rawRequest.encoding
-      },"time":${rawRequest.time},"pow":${rawRequest.pow}}`;
-    } else {
-      finalStringRequest = `{"cid":${rawRequest.cid},"uri":${
-        rawRequest.uri
-      },"jsps":${_formatJsps(rawRequest.jsps)},${_addTrims(
-        rawRequest.trims,
-      )}${_addPost(rawRequest.post)}"encoding":${rawRequest.encoding},"time":${
-        rawRequest.time
-      },"pow":${rawRequest.pow}}`;
-    }
-  } else if (request.type === "formatted") {
-    const formattedRequest = request as FormattedOracleRequest;
-    if (formattedRequest.fType === "eth") {
-      _validateEthApiMethod(formattedRequest.ethApi.method);
-      finalStringRequest = `{"cid":1,"uri":${
-        formattedRequest.uri
-      },"jsps":${_formatJsps(formattedRequest.jsps)},"params":[{"from":${
-        formattedRequest.ethApi.params.from
-      },"to":${formattedRequest.ethApi.params},"data":${_handleData(
-        formattedRequest.ethApi.params.data,
-      )},"gas":${
-        formattedRequest.ethApi.params.gas
-      }, "latest"]},"encoding":"json"}`;
-    } else {
-      finalStringRequest = `{"cid":1,"uri":${
-        formattedRequest.uri
-      },"jsps":${_formatJsps(formattedRequest.jsps)}},${_addTrims(
-        formattedRequest.trims,
-      )}${_addPost(formattedRequest.post)}"encoding":"json"}`;
-    }
-    finalStringRequest = await proofOfWork(
-      finalStringRequest,
-      getUTCTimestamp(),
-    );
+export default async function createRequest(request: FormattedOracleRequest | RawOracleRequest) {
+  if (request.jsps) _validateJsps(request.jsps);
+  let obj = {} as any;
+  obj["cid"] = 1;
+  obj["encoding"] = "json";
+  obj["uri"] = request.uri;
+  obj["jsps"] = request.jsps ?? ["/result"];
+
+  if (Object.keys(request).includes("ethApi")) {
+    const ethRequest = request as FormattedOracleEthApiRequest | RawOracleEthApiRequest;
+    obj["ethApi"] = ethRequest.ethApi;
+    obj["params"] = [{
+      from: ethRequest.params.from,
+      to: ethRequest.params.to,
+      data: _handleData(ethRequest.params.data),
+      gas: ethRequest.params.gas
+    }, ethRequest.params.blockTag ?? "latest"]
   } else {
-    throw new Error("Invalid Request Type");
+    const httpRequest = request as FormattedOracleHttpsRequest | RawOracleHttpsRequest;
+    if (httpRequest.post) obj["post"] = httpRequest.post;
+    if (httpRequest.trims) obj["trims"] = httpRequest.trims;
   }
 
-  if (finalStringRequest === "") throw new Error("Failed to Create Request");
-
-  return finalStringRequest;
-
-  // return formatSubmitRequest(finalStringRequest);
+  const requestStr = JSON.stringify(obj);
+  
+  return await proofOfWork(
+    requestStr.slice(1, requestStr.length - 1),
+    getUTCTimestamp()
+  );
 }

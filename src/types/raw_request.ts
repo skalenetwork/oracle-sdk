@@ -4,7 +4,7 @@ import { Uri } from "./shared";
 type _BaseRequest = {
   cid: string;
   jsps: string[];
-  pow: string | number;
+  trims?: number[];
   time: number | string;
   encoding: "json";
 };
@@ -12,20 +12,15 @@ type _BaseRequest = {
 export type RawOracleHttpsRequest = {
   uri: Uri;
   encoding: string; // JSON only
-  trims?: number[];
   post?: string;
-  rType: "https";
 } & _BaseRequest;
 
 export type RawOracleEthApiRequest = {
   uri: string;
   ethApi: string;
   params: EthCallParams;
-  rType: "eth";
 } & _BaseRequest;
 
-export type RawOracleRequest =
-  | ({
-      type: "raw";
-    } & RawOracleEthApiRequest)
-  | RawOracleHttpsRequest;
+export type RawOracleRequest = {
+  type: "raw"
+} & RawOracleEthApiRequest | RawOracleHttpsRequest;

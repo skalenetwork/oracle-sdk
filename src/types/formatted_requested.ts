@@ -1,10 +1,6 @@
 import { EthCallParams } from "./eth_call";
 import { Uri } from "./shared";
 
-type _BaseRequest = {
-  jsps: string[];
-};
-
 /**
  * For GET or POST requests to external apis
  */
@@ -12,8 +8,8 @@ export type FormattedOracleHttpsRequest = {
   uri: Uri;
   trims?: number[];
   post?: string;
-  fType: "https";
-} & _BaseRequest;
+  jsps: string[];
+};
 
 export type EthCallRequest = {
   method: "eth_call";
@@ -27,12 +23,11 @@ export type EthApi = EthCallRequest;
  */
 export type FormattedOracleEthApiRequest = {
   uri: string;
-  ethApi: EthApi;
-  fType: "eth";
-} & _BaseRequest;
+  ethApi: string;
+  params: EthCallParams;
+  jsps?: string[];
+};
 
-export type FormattedOracleRequest =
-  | ({
-      type: "formatted";
-    } & FormattedOracleHttpsRequest)
-  | FormattedOracleEthApiRequest;
+export type FormattedOracleRequest = {
+  type: "formatted"
+} & FormattedOracleHttpsRequest | FormattedOracleEthApiRequest;

@@ -6,7 +6,7 @@ const _getTestnetRPC = (name: string): RpcUrl =>
   `https://staging-v3.skalenodes.com/v1/${name}`;
 
 export const chains: { [key: string]: RpcUrl } = {
-  calypso: _getMainnetRPC("honoable-steel-rasalhague"),
+  calypso: _getMainnetRPC("honorable-steel-rasalhague"),
   "calypso-testnet": _getTestnetRPC("staging-utter-unripe-menkar"),
   "chaos-testnet": _getTestnetRPC("staging-fast-active-bellatrix"),
   europa: _getMainnetRPC("elated-tan-skat"),
