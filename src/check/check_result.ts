@@ -1,5 +1,6 @@
 import { formatCheckResult, getRPCUrl } from "../utils";
 import { OracleFetchOptions } from "../types";
+import { FETCH_HEADERS, FETCH_METHOD } from "../constants";
 
 // TODO - Fix this/change this, maybe update the type to reduce number of checks
 function _getMaxIterations(opts: OracleFetchOptions) {
@@ -32,11 +33,9 @@ export async function checkResult(
 
   while (i < maxIterations) {
     const check = await fetch(getRPCUrl(opts), {
-      method: "POST",
+      method: FETCH_METHOD,
       body: JSON.stringify(req),
-      headers: {
-        "Content-Type": "application/json",
-      },
+      headers: FETCH_HEADERS,
     });
 
     const response = await check.json();
