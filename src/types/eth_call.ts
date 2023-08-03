@@ -17,5 +17,5 @@ export type EthCallParams = {
   to: `0x${string}`;
   data: `0x${string}` | UnformattedEthCallData;
   gas: `0x${string}`;
-  blockTag?: number | "latest";
+  blockNumberOrTag?: number | "latest";
 };

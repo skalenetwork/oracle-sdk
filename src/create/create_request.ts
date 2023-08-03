@@ -54,7 +54,7 @@ export default async function createRequest(
         data: _handleData(ethRequest.params.data),
         gas: ethRequest.params.gas,
       },
-      ethRequest.params.blockTag ?? "latest",
+      ethRequest.params.blockNumberOrTag ?? "latest",
     ];
   } else {
     const httpRequest = request as
