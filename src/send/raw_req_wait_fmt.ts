@@ -9,7 +9,7 @@ import { formatResponse } from "../format";
 import { submitRequest } from "../submit";
 import { formatSubmitRequest } from "../utils";
 
-export default async function sendRawReqeustAndWaitFormatted(
+export default async function sendRawRequestAndWaitFormatted(
   request: RawOracleRequest,
   opts: OracleFetchOptions,
 ): Promise<OracleContractResponse> {

@@ -4,13 +4,9 @@ import {
   FormattedOracleRequest,
   OracleContractResponse,
   OracleFetchOptions,
-  OracleRequest,
   OracleResponse,
   OracleSubmitRequest,
 } from "../types";
-import { createRequest } from "../create";
-import { checkResult } from "../check";
-import { formatResponse } from "../format";
 import { submitRequest } from "../submit";
 import sendRequestAndWaitFormatted from "../send/req_wait_fmt";
 import sendRequestAndWait from "../send/req_wait";
@@ -20,18 +16,6 @@ export default class Oracle {
 
   constructor(fetchOpts: OracleFetchOptions) {
     this.#opts = fetchOpts;
-  }
-
-  public async create(request: OracleRequest): Promise<string> {
-    return await createRequest(request);
-  }
-
-  public async check(oracleResponseId: string, opts?: OracleFetchOptions) {
-    return await checkResult(oracleResponseId, opts ?? this.#opts);
-  }
-
-  public format(responseStr: string): OracleContractResponse {
-    return formatResponse(responseStr);
   }
 
   public async send(
