@@ -1,7 +1,10 @@
 import { keccak256, toHex } from "viem/utils";
 import { MAX_POW_NUMBER, MAX_UINT_256, MIN_POW_NUMBER } from "../constants";
 
-function _format(request: string, time: string, iteration: number): string {
+function _format(request: string, time: string, iteration: number, timePreset: boolean): string {
+  if (timePreset) {
+    return `{${request},"pow":${iteration}}`;
+  }
   return `{${request},"time":${time},"pow":${iteration}}`;
 }
 
@@ -16,12 +19,13 @@ function _format(request: string, time: string, iteration: number): string {
 export default async function proofOfWork(
   request: string,
   time: string,
+  timePreset: boolean
 ): Promise<string> {
   let iterations: number = 0;
   let s: string = "";
 
   while (iterations < MAX_POW_NUMBER) {
-    s = _format(request, time, iterations);
+    s = _format(request, time, iterations, timePreset);
 
     const hash = keccak256(toHex(s));
 

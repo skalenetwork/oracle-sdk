@@ -38,8 +38,9 @@ export default async function createRequest(request: FormattedOracleRequest | Ra
   obj["encoding"] = "json";
   obj["uri"] = request.uri;
   obj["jsps"] = request.jsps ?? ["/result"];
+  const requestKeys = Object.keys(request);
 
-  if (Object.keys(request).includes("ethApi")) {
+  if (requestKeys.includes("ethApi")) {
     const ethRequest = request as FormattedOracleEthApiRequest | RawOracleEthApiRequest;
     obj["ethApi"] = ethRequest.ethApi;
     obj["params"] = [{
@@ -54,10 +55,19 @@ export default async function createRequest(request: FormattedOracleRequest | Ra
     if (httpRequest.trims) obj["trims"] = httpRequest.trims;
   }
 
+  if (requestKeys.includes("time")) {
+    const req = request as RawOracleRequest;
+    obj["time"] = req.time;
+    obj["cid"] = req.cid;
+  }
+
+
+
   const requestStr = JSON.stringify(obj);
   
   return await proofOfWork(
     requestStr.slice(1, requestStr.length - 1),
-    getUTCTimestamp()
+    obj["time"] ?? getUTCTimestamp(),
+    obj["time"] !== undefined
   );
 }

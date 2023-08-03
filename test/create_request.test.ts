@@ -15,12 +15,12 @@ describe("createRequest(request: OracleRequest)", () => {
             expect(request.substring(0, 1)).to.equal("{");
             expect(request.substring(request.length - 1)).to.equal("}");
             expect(request).to.contain("}");
-            expect(request).to.contain('"cid":1');
+            expect(request).to.contain('"cid":"1"');
             expect(request).to.contain('"uri":"https://www.binance.com/api/v3/time"');
             expect(request).to.contain('"jsps":["/serverTime"]')
             expect(request).to.contain('"trims":[4]');
             expect(request).to.contain('"encoding":"json"');
-            expect(request).to.contain('"time":"1649253252000"'); /// TODO FiX
+            expect(request).to.contain('"time":1649253252000'); /// TODO FiX
         });
         it("ETH - Success", async() => {
             const request = await defaultRawEthRequest();
@@ -29,11 +29,12 @@ describe("createRequest(request: OracleRequest)", () => {
             expect(request.substring(0, 1)).to.equal("{");
             expect(request.substring(request.length - 1)).to.equal("}");
             expect(request).to.contain("}");
-            expect(request).to.contain('"cid":1');
+            expect(request).to.contain('"cid":"1"');
             expect(request).to.contain('"uri":"eth://"');
             expect(request).to.contain('"jsps":["/result"]')
             expect(request).to.contain('"encoding":"json"');
-            expect(request).to.contain('"time":"1649253252000"'); /// TODO FIX
+            console.log(request);
+            expect(request).to.contain('"time":1649253252000'); /// TODO FIX
         });
     })
     describe("Formatted Request", () => {

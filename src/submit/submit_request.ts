@@ -13,7 +13,6 @@ export default async function submitRequest(
     },
   });
 
-  const jsonResponse = await response.json();
-  console.log("Json Response: ", jsonResponse);
-  return JSON.parse(jsonResponse.result);
+  const json = await response.json();
+  return json["result"];
 }

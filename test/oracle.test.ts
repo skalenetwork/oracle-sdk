@@ -1,7 +1,7 @@
 import { it } from "mocha";
 import { generatePrivateKey, privateKeyToAccount } from "viem/accounts";
 import { Oracle } from "../src/oracle";
-import { encodeFunctionData, getContract, zeroAddress } from "viem";
+import { encodeFunctionData, zeroAddress } from "viem";
 import {
     mainnetNFT,
 } from "./claim.contract.json";
@@ -15,10 +15,10 @@ describe("Oracle Claim Test", () => {
     //     chain: skaleChaosTestnet,
     //     transport: webSocket("wss://staging-v3.skalenodes.com/v1/ws/staging-fast-active-bellatrix")
     // });
-    const contract = getContract({
-        abi: JSON.parse(mainnetNFT.abi) as any,
-        address: mainnetNFT.address as `0x${string}`
-    });
+    // const contract = getContract({
+    //     abi: JSON.parse(mainnetNFT.abi) as any,
+    //     address: mainnetNFT.address as `0x${string}`
+    // });
 
     const oracle = new Oracle({
         nameOrRpcUrl: "https://staging-v3.skalenodes.com/v1/staging-fast-active-bellatrix",
@@ -30,7 +30,7 @@ describe("Oracle Claim Test", () => {
 		ethApi: "eth_call",
 		"params": {
 			"from": zeroAddress,
-			"to": contract.address,
+			"to": mainnetNFT.address as `0x${string}`,
 			"data": encodeFunctionData({
                 abi: JSON.parse(mainnetNFT.abi),
                 functionName: "balanceOf",

@@ -22,6 +22,7 @@ export default async function sendRequestAndWaitFormatted(
     formatSubmitRequest(submitRequestData),
     opts,
   );
+  console.log(requestId);
   const resultData = await checkResult(requestId, opts);
 
   return formatResponse(resultData);

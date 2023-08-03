@@ -2,7 +2,7 @@ import { OracleSubmitRequest, OracleCheckResult } from "../types/oracle";
 
 function _format(
   param: string,
-  method: "oracle_checkRequest" | "oracle_submitRequest",
+  method: "oracle_checkResult" | "oracle_submitRequest",
 ): OracleCheckResult | OracleSubmitRequest {
   return {
     id: 83,
@@ -13,7 +13,7 @@ function _format(
 }
 
 export function formatCheckResult(param: string): OracleCheckResult {
-  return _format(param, "oracle_checkRequest") as OracleCheckResult;
+  return _format(param, "oracle_checkResult") as OracleCheckResult;
 }
 
 export function formatSubmitRequest(param: string): OracleSubmitRequest {
