@@ -6,7 +6,7 @@ import {
   OracleFetchOptions,
   OracleRequest,
   OracleResponse,
-  OracleSubmitRequest
+  OracleSubmitRequest,
 } from "../types";
 import { createRequest } from "../create";
 import { checkResult } from "../check";
@@ -40,12 +40,9 @@ export default class Oracle {
     opts?: OracleFetchOptions,
   ): Promise<OracleResponse | OracleContractResponse> {
     const formattedRequest = request as FormattedOracleRequest;
-      return returnType === "contract"
-        ? await sendRequestAndWaitFormatted(
-            formattedRequest,
-            opts ?? this.#opts,
-          )
-        : await sendRequestAndWait(formattedRequest, opts ?? this.#opts);
+    return returnType === "contract"
+      ? await sendRequestAndWaitFormatted(formattedRequest, opts ?? this.#opts)
+      : await sendRequestAndWait(formattedRequest, opts ?? this.#opts);
   }
 
   public async submit(

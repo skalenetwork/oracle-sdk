@@ -13,7 +13,7 @@ describe("Utils: getUTCTimestamp", () => {
       expect(getUTCTimestamp(new Date(1690866858000))).to.be.equal(
         new Date("Mon Jul 31 2023 22:14:18 GMT-0700 (Pacific Daylight Time)")
           .getTime()
-          .toString()
+          .toString(),
       );
     }
   });

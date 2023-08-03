@@ -69,9 +69,9 @@ export async function defaultRawEthRequest() {
     type: "raw",
     uri: "eth://",
     ethApi,
-    params: params,
+    params,
     jsps: ["/result"],
-    trims: trims,
+    trims,
     encoding: "json",
     cid: cid.toString(),
     time,
@@ -92,7 +92,7 @@ export async function defaultFormattedEthRequest() {
     uri: "eth://",
     ethApi,
     jsps: ["/result"],
-    params: params
+    params,
   });
 }
 

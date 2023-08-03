@@ -21,6 +21,8 @@ export type RawOracleEthApiRequest = {
   params: EthCallParams;
 } & _BaseRequest;
 
-export type RawOracleRequest = {
-  type: "raw"
-} & RawOracleEthApiRequest | RawOracleHttpsRequest;
+export type RawOracleRequest =
+  | ({
+      type: "raw";
+    } & RawOracleEthApiRequest)
+  | RawOracleHttpsRequest;

@@ -40,9 +40,8 @@ export async function checkResult(
     });
 
     const response = await check.json();
-    console.log(JSON.stringify(response));
-    console.log(`Response ${i}: ${response}`)
-    if (response["error"]) {
+
+    if (response.error) {
       await new Promise((resolve) => setTimeout(resolve, 2500));
     } else {
       return response.result;

@@ -28,6 +28,8 @@ export type FormattedOracleEthApiRequest = {
   jsps?: string[];
 };
 
-export type FormattedOracleRequest = {
-  type: "formatted"
-} & FormattedOracleHttpsRequest | FormattedOracleEthApiRequest;
+export type FormattedOracleRequest =
+  | ({
+      type: "formatted";
+    } & FormattedOracleHttpsRequest)
+  | FormattedOracleEthApiRequest;

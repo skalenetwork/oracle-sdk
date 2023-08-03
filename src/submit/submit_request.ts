@@ -14,5 +14,5 @@ export default async function submitRequest(
   });
 
   const json = await response.json();
-  return json["result"];
+  return json.result;
 }

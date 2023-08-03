@@ -6,7 +6,7 @@ import {
   RawOracleEthApiRequest,
   RawOracleHttpsRequest,
   RawOracleRequest,
-  UnformattedEthCallData
+  UnformattedEthCallData,
 } from "../types";
 import { getUTCTimestamp, proofOfWork } from "../utils";
 /**
@@ -31,43 +31,50 @@ function _handleData(data: `0x${string}` | UnformattedEthCallData) {
   }
 }
 
-export default async function createRequest(request: FormattedOracleRequest | RawOracleRequest) {
+export default async function createRequest(
+  request: FormattedOracleRequest | RawOracleRequest,
+) {
   if (request.jsps) _validateJsps(request.jsps);
-  let obj = {} as any;
-  obj["cid"] = 1;
-  obj["encoding"] = "json";
-  obj["uri"] = request.uri;
-  obj["jsps"] = request.jsps ?? ["/result"];
+  const obj = {} as any;
+  obj.cid = 1;
+  obj.encoding = "json";
+  obj.uri = request.uri;
+  obj.jsps = request.jsps ?? ["/result"];
   const requestKeys = Object.keys(request);
 
   if (requestKeys.includes("ethApi")) {
-    const ethRequest = request as FormattedOracleEthApiRequest | RawOracleEthApiRequest;
-    obj["ethApi"] = ethRequest.ethApi;
-    obj["params"] = [{
-      from: ethRequest.params.from,
-      to: ethRequest.params.to,
-      data: _handleData(ethRequest.params.data),
-      gas: ethRequest.params.gas
-    }, ethRequest.params.blockTag ?? "latest"]
+    const ethRequest = request as
+      | FormattedOracleEthApiRequest
+      | RawOracleEthApiRequest;
+    obj.ethApi = ethRequest.ethApi;
+    obj.params = [
+      {
+        from: ethRequest.params.from,
+        to: ethRequest.params.to,
+        data: _handleData(ethRequest.params.data),
+        gas: ethRequest.params.gas,
+      },
+      ethRequest.params.blockTag ?? "latest",
+    ];
   } else {
-    const httpRequest = request as FormattedOracleHttpsRequest | RawOracleHttpsRequest;
-    if (httpRequest.post) obj["post"] = httpRequest.post;
-    if (httpRequest.trims) obj["trims"] = httpRequest.trims;
+    const httpRequest = request as
+      | FormattedOracleHttpsRequest
+      | RawOracleHttpsRequest;
+    if (httpRequest.post) obj.post = httpRequest.post;
+    if (httpRequest.trims) obj.trims = httpRequest.trims;
   }
 
   if (requestKeys.includes("time")) {
     const req = request as RawOracleRequest;
-    obj["time"] = req.time;
-    obj["cid"] = req.cid;
+    obj.time = req.time;
+    obj.cid = req.cid;
   }
 
-
-
   const requestStr = JSON.stringify(obj);
-  
+
   return await proofOfWork(
     requestStr.slice(1, requestStr.length - 1),
-    obj["time"] ?? getUTCTimestamp(),
-    obj["time"] !== undefined
+    obj.time ?? getUTCTimestamp(),
+    obj.time !== undefined,
   );
 }
